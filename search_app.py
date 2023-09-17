@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, request
-from search_engine import *
+from utils import *
 from config.config_parser import Config
 
 
