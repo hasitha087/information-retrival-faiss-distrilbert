@@ -13,12 +13,8 @@ COLUMN = conf.configurations.col
 
 # Call create dataframe and generate embeddings functions from search_engine
 df = read_data(FILEDIR)
-if df.empty == True:
-    print("File not found. Please check the corpus file path.")
-    exit()
-else:
-    model, embeds = encode_corpus(df, MODELNAME, COLUMN)
- 
+model, embeds = encode_corpus(df, MODELNAME, COLUMN)
+
 app = Flask(__name__)
 
 # Flask REST API to return top results
@@ -57,7 +53,7 @@ def sementic():
     
     # Return search results
     try:
-        D, I = search_vect([data], model, embeds, df, num_results=results)
+        _, I = search_vect([data], model, embeds, df, num_results=results)
         return jsonify(get_results(df, I, COLUMN)), 200
 
     except Exception as e:

@@ -10,3 +10,11 @@ FAISS (Facebook AI Similarity Search) is an one of the most popular implementati
 FAISS assures faster similarity searching when the number of vectors may grow up to millions or billions.
 
 This is a real-time inferencing implementation based on python Flask.
+
+How to run.
+
+1) Install anaconda (or python)
+2) create python environment (optional)
+        conda create -n env_name
+3) Install python modules: pip install requirements.txt
+4) Run search_app.py: python search_app.py

@@ -6,7 +6,7 @@ import faiss
 
 
 # Create dataframe using csv file
-def read_data(file):
+def read_data(file:str) -> pd.DataFrame:
     """
     Function that read csv file and create pandas dataframe and
     add an index column name as "ID" which will help to index text corpus using faiss algorithm
@@ -24,15 +24,17 @@ def read_data(file):
     try:
         df = pd.read_csv(file, header=0, sep=';')
         df['ID'] = np.random.randint(0,100, size=len(df))
-        return df
 
     except FileNotFoundError:
-        print("File not found")
-        return pd.DataFrame()
+        print("File not found. Please check the corpus file path.")
+        exit()
+
+    else:
+        return df
 
     
 # Function to transform and create sentense embeddings
-def encode_corpus(df, model_name, col):
+def encode_corpus(df:pd.DataFrame, model_name:str, col:str) -> tuple[SentenceTransformer, np.ndarray]:
     """
     This function transform and create sentense embedding based on
     DistilBERT.
@@ -61,13 +63,18 @@ def encode_corpus(df, model_name, col):
 
     print("Runs on CUDA: " + str(model.device))
 
-    embeddings = model.encode(df[col].to_list(), show_progress_bar=True)
+    if len(df[col]) > 0:
+        embeddings = model.encode(df[col].to_list(), show_progress_bar=True)
+        print(type(embeddings))
+    else:
+        print("no records found in {} column".format(col))
+        exit()
 
     return model, embeddings
 
 
 # Function to transform user query and find similar vectors
-def search_vect(query, model, embeddings, df, num_results=2):
+def search_vect(query:str, model:SentenceTransformer, embeddings:np.ndarray, df:pd.DataFrame, num_results:int=2) -> tuple[np.ndarray]:
     """
     This function transform user query into same DistilBERT embeddings
     and find the similar vectors using FAISS algorithm.
@@ -85,7 +92,7 @@ def search_vect(query, model, embeddings, df, num_results=2):
     @return D numpy array which includes distance between results and query
     @return I numpy array which includes ID of the results
     """
-
+    
     try:
         # Change data type to float32
         embeddings = np.array([embedding for embedding in embeddings]).astype("float32")
@@ -101,20 +108,19 @@ def search_vect(query, model, embeddings, df, num_results=2):
 
         vector = model.encode(list(query))
         D, I = index.search(np.array(vector).astype("float32"), k=num_results)
-        return D, I
-    
+        
     except Exception as e:
         print(e)
 
-
+    else:  
+        return D, I
+    
+    
 # Function to return top search results
-def get_results(df, I, column):
+def get_results(df:pd.DataFrame, I:np.ndarray, column:str) -> list:
     """
     Returns the Answer based on the sentense index
     """
 
-    try:
-        return [list(df[df.ID == idx][column]) for idx in I[0]]
+    return [list(df[df.ID == idx][column]) for idx in I[0]]
     
-    except Exception as e:
-        print(e)
