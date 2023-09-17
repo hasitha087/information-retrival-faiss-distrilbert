@@ -25,11 +25,12 @@ def read_data(file):
         df = pd.read_csv(file, header=0, sep=';')
         df['ID'] = np.random.randint(0,100, size=len(df))
         return df
+
+    except FileNotFoundError:
+        print("File not found")
+        return pd.DataFrame()
+
     
-    except Exception as e:
-        print(e)
-
-
 # Function to transform and create sentense embeddings
 def encode_corpus(df, model_name, col):
     """
@@ -51,22 +52,18 @@ def encode_corpus(df, model_name, col):
     @return embeddings: embedded sentense list
     """
 
-    try:
-        # Instantiate the sentence-level DistilBERT
-        model = SentenceTransformer(model_name)
+    # Instantiate the sentence-level DistilBERT
+    model = SentenceTransformer(model_name)
 
-        # Check if CUDA is available ans switch to GPU
-        if torch.cuda.is_available():
-            model = model.to(torch.device("cuda"))
+    # Check if CUDA is available ans switch to GPU
+    if torch.cuda.is_available():
+        model = model.to(torch.device("cuda"))
 
-        print("Runs on CUDA: " + str(model.device))
+    print("Runs on CUDA: " + str(model.device))
 
-        embeddings = model.encode(df[col].to_list(), show_progress_bar=True)
+    embeddings = model.encode(df[col].to_list(), show_progress_bar=True)
 
-        return model, embeddings
-    
-    except Exception as e:
-        print(e)
+    return model, embeddings
 
 
 # Function to transform user query and find similar vectors
