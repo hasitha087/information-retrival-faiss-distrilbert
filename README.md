@@ -14,7 +14,8 @@ This is a real-time inferencing implementation based on python Flask.
 How to run.
 
 1) Install anaconda (or python)
-2) create python environment (optional)
+2) Create python environment (optional)
         conda create -n env_name
+3) Clone repo and goto the directory: cd information-retrival-faiss-distrilbert/
 3) Install python modules: pip install requirements.txt
 4) Run search_app.py: python search_app.py
