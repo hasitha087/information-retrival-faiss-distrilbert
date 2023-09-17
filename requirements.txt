@@ -1,0 +1,6 @@
+easydict==1.10
+faiss-cpu==1.7.4
+Flask==2.3.3
+pandas==2.1.0
+requests==2.31.0
+sentence-transformers==2.2.2
