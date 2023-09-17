@@ -13,7 +13,11 @@ COLUMN = conf.configurations.col
 
 # Call create dataframe and generate embeddings functions from search_engine
 df = read_data(FILEDIR)
-model, embeds = encode_corpus(df, MODELNAME, COLUMN)
+if df.empty == True:
+    print("File not found. Please check the corpus file path.")
+    exit()
+else:
+    model, embeds = encode_corpus(df, MODELNAME, COLUMN)
  
 app = Flask(__name__)
 
