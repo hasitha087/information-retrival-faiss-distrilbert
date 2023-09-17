@@ -1,0 +1,6 @@
+configurations:
+  file_dir: 'data/Polestar_case_data.csv'
+  model_name: 'distilbert-base-nli-stsb-mean-tokens'
+  col: 'Answer'
+
+
